@@ -1,7 +1,6 @@
-import pytest
-
 from evm import VirtualMachine
 from instructions.instruction_set import instruction_set
+from instructions.binary_maths import decimal_to_twos_complement_binary, twos_complement_binary_to_decimal
 
 
 def test_simple_sum():
@@ -34,7 +33,6 @@ def test_swap():
     assert vm.stack == [0x01, 0x02, 0x03]
 
 
-@pytest.mark.ignore
 def test_comparisons_bitwise():
     # (2 > 1) && (3 < 4) || (10 == 10) == 1
     operations = bytearray([0x61, 0x01, 0x02, 0x11, 0x61, 0x04, 0x03, 0x10, 0x61, 0x0a, 0x0a, 0x14, 0x17, 0x16])
@@ -43,7 +41,6 @@ def test_comparisons_bitwise():
     assert vm.stack == [0x01]
 
 
-@pytest.mark.ignore
 def test_not():
     # not 0b00001010 == 0b11110101
     operations = bytearray([0x60, 0b00001010, 0x19])
@@ -52,7 +49,6 @@ def test_not():
     assert vm.stack == [0xfff5]
 
 
-@pytest.mark.ignore
 def test_storage():
     # save(1 -> 10); load(1) == 10
     operations = bytearray([0x61, 0x0a, 0x01, 0x55, 0x60, 0x01, 0x54, 0x60, 0x0a, 0x14])
@@ -62,9 +58,16 @@ def test_storage():
     assert vm.storage == {1: 0x0a}
 
 
-@pytest.mark.ignore
 def test_pc():
     operations = bytearray([0x62, 0x0a, 0x01, 0x02, 0x01, 0x01, 0x58])
     vm = VirtualMachine(instruction_set)
     vm.execute(operations)
     assert vm.stack == [0x0d, 0x05]
+
+
+def test_sign_extend():
+    vm = VirtualMachine(instruction_set)
+    vm.stack.append(decimal_to_twos_complement_binary(-42, 8))
+    vm.stack.append(8)
+    vm.execute(bytearray([0x0b]))
+    assert twos_complement_binary_to_decimal(vm.stack.pop(), 256) == twos_complement_binary_to_decimal(-42, 8)

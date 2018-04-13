@@ -1,4 +1,5 @@
-from evm import VirtualMachine, Instruction
+from pyevm.evm import VirtualMachine, Instruction
+from instructions.binary_maths import sign_extend
 
 
 class Stop(Instruction):
@@ -140,4 +141,8 @@ class SignExtend(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        raise NotImplementedError()
+        number_bits = vm.stack.pop()
+        binary = vm.stack.pop()
+        res = sign_extend(binary, number_bits, 256)
+        vm.stack.append(res)
+        print(f"{bin(res)[:8]}... <= SIGNEXTEND {number_bits} {binary}")
