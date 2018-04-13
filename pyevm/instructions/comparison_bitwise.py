@@ -128,4 +128,9 @@ class Byte(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        raise NotImplementedError()
+        n = vm.stack.pop()  # 0 <= n < 32
+        b = vm.stack.pop()
+        bit_mask = (2 ** 8 - 1) << n * 8
+        res = b & bit_mask
+        res = res >> n * 8
+        vm.stack.append(res)

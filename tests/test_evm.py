@@ -79,3 +79,11 @@ def test_smod():
     vm.stack.append(decimal_to_twos_complement_binary(-23, 256))
     vm.execute(bytearray([0x07]))
     assert twos_complement_binary_to_decimal(vm.stack.pop(), 256) == -2
+
+
+def test_byte():
+    vm = VirtualMachine(instruction_set)
+    vm.stack.append(0b111111110000000011111111)
+    vm.stack.append(2)
+    vm.execute(bytearray([0x1a]))
+    assert vm.stack.pop() == 0b11111111
