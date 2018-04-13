@@ -1,4 +1,7 @@
 from evm import VirtualMachine, Instruction
+import logging
+
+logger = logging.getLogger('pyevm')
 
 
 class Pop(Instruction):
@@ -41,7 +44,7 @@ class SLoad(Instruction):
         storage_address = vm.stack.pop()
         value = vm.storage[storage_address]
         vm.stack.append(value)
-        print(f"{value} <= SLOAD {storage_address}")
+        logger.info(f"{value} <= SLOAD {storage_address}")
 
 
 class SStore(Instruction):
@@ -52,7 +55,7 @@ class SStore(Instruction):
         storage_address = vm.stack.pop()
         storage_value = vm.stack.pop()
         vm.storage[storage_address] = storage_value
-        print(f"SSTORE {storage_address}->{storage_value}")
+        logger.info(f"SSTORE {storage_address}->{storage_value}")
 
 
 class Jump(Instruction):
@@ -62,7 +65,7 @@ class Jump(Instruction):
     def execute(self, vm: VirtualMachine):
         res = vm.stack.pop()
         vm.pc = res - 1
-        print(f"JUMP {res}")
+        logger.info(f"JUMP {res}")
 
 
 class JumpI(Instruction):
@@ -83,7 +86,7 @@ class Pc(Instruction):
     def execute(self, vm: VirtualMachine):
         res = vm.pc - 1
         vm.stack.append(res)
-        print(f"{res} <= PC")
+        logger.info(f"{res} <= PC")
 
 
 class MSize(Instruction):

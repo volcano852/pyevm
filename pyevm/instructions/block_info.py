@@ -1,4 +1,5 @@
 from evm import VirtualMachine, Instruction
+import logging
 
 
 class BlockHash(Instruction):

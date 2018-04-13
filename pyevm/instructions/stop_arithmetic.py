@@ -1,5 +1,8 @@
 from pyevm.evm import VirtualMachine, Instruction
 from instructions.binary_maths import *
+import logging
+
+logger = logging.getLogger('pyevm')
 
 
 class Stop(Instruction):
@@ -19,7 +22,7 @@ class Add(Instruction):
         b = vm.stack.pop()
         res = a + b
         vm.stack.append(res)
-        print(f"{res} <= ADD {a} {b}")
+        logger.info(f"{res} <= ADD {a} {b}")
 
 
 class Mul(Instruction):
@@ -31,7 +34,7 @@ class Mul(Instruction):
         b = vm.stack.pop()
         res = a * b
         res = vm.stack.append(res)
-        print(f"{res} <= MUL {a} {b}")
+        logger.info(f"{res} <= MUL {a} {b}")
 
 
 class Sub(Instruction):
@@ -43,7 +46,7 @@ class Sub(Instruction):
         b = vm.stack.pop()
         res = a - b
         vm.stack.append(res)
-        print(f"{res} <= SUB {a} {b}")
+        logger.info(f"{res} <= SUB {a} {b}")
 
 
 class Div(Instruction):
@@ -58,7 +61,7 @@ class Div(Instruction):
         else:
             res = a / b
         vm.stack.append(res)
-        print(f"{res} <= DIV {a} {b}")
+        logger.info(f"{res} <= DIV {a} {b}")
 
 
 class SDiv(Instruction):
@@ -81,7 +84,7 @@ class Mod(Instruction):
         else:
             res = a % b
         vm.stack.append(res)
-        print(f"{res} <= MOD {a} {b}")
+        logger.info(f"{res} <= MOD {a} {b}")
 
 
 class SMod(Instruction):
@@ -98,7 +101,9 @@ class SMod(Instruction):
             res = abs(twos_complement_binary_to_decimal(a, 256)) % abs(twos_complement_binary_to_decimal(b, 256))
             if sign_bit == 1:  # negative number
                 res = res * -1
-        vm.stack.append(decimal_to_twos_complement_binary(res, 256))
+        res = decimal_to_twos_complement_binary(res, 256)
+        vm.stack.append(res)
+        logger.info("SMOD")
 
 
 class AddMod(Instruction):
@@ -114,7 +119,7 @@ class AddMod(Instruction):
         else:
             res = (a + b) % c
         vm.stack.append(res)
-        print(f"{res} <= ADDMOD {a} {b} {c}")
+        logger.info(f"{res} <= ADDMOD {a} {b} {c}")
 
 
 class MulMod(Instruction):
@@ -130,7 +135,7 @@ class MulMod(Instruction):
         else:
             res = (a * b) % c
         vm.stack.append(res)
-        print(f"{res} <= MULMOD {a} {b} {c}")
+        logger.info(f"{res} <= MULMOD {a} {b} {c}")
 
 
 class Exp(Instruction):
@@ -142,7 +147,7 @@ class Exp(Instruction):
         b = vm.stack.pop()
         res = a ** b
         vm.stack.append(res)
-        print(f"{res} <= EXP {a} {b}")
+        logger.info(f"{res} <= EXP {a} {b}")
 
 
 class SignExtend(Instruction):
@@ -154,4 +159,4 @@ class SignExtend(Instruction):
         binary = vm.stack.pop()
         res = sign_extend(binary, number_bits, 256)
         vm.stack.append(res)
-        print(f"{bin(res)[:8]}... <= SIGNEXTEND {number_bits} {binary}")
+        logger.info(f"{bin(res)[:8]}... <= SIGNEXTEND {number_bits} {binary}")

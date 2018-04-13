@@ -1,4 +1,7 @@
 from evm import VirtualMachine, Instruction
+import logging
+
+logger = logging.getLogger('pyevm')
 
 
 class Lt(Instruction):
@@ -13,7 +16,7 @@ class Lt(Instruction):
         else:
             res = 0
         vm.stack.append(res)
-        print(f"{res} <= LT {a} {b}")
+        logger.info(f"{res} <= LT {a} {b}")
 
 
 class Gt(Instruction):
@@ -28,7 +31,7 @@ class Gt(Instruction):
         else:
             res = 0
         vm.stack.append(res)
-        print(f"{res} <= GT {a} {b}")
+        logger.info(f"{res} <= GT {a} {b}")
 
 
 class Slt(Instruction):
@@ -59,7 +62,7 @@ class Eq(Instruction):
         else:
             res = 0
         vm.stack.append(res)
-        print(f"{res} <= EQ {a} {b}")
+        logger.info(f"{res} <= EQ {a} {b}")
 
 
 class IsZero(Instruction):
@@ -73,7 +76,7 @@ class IsZero(Instruction):
         else:
             res = 0
         vm.stack.append(res)
-        print(f"{res} <= ISZERO {a}")
+        logger.info(f"{res} <= ISZERO {a}")
 
 
 class And(Instruction):
@@ -85,7 +88,7 @@ class And(Instruction):
         b = vm.stack.pop()
         res = a & b
         vm.stack.append(res)
-        print(f"{res} <= AND {a} {b}")
+        logger.info(f"{res} <= AND {a} {b}")
 
 
 class Or(Instruction):
@@ -97,7 +100,7 @@ class Or(Instruction):
         b = vm.stack.pop()
         res = a | b
         vm.stack.append(res)
-        print(f"{res} <= OR {a} {b}")
+        logger.info(f"{res} <= OR {a} {b}")
 
 
 class Xor(Instruction):
@@ -109,7 +112,7 @@ class Xor(Instruction):
         b = vm.stack.pop()
         res = a ^ b
         vm.stack.append(res)
-        print(f"{res} <= XOR {a} {b}")
+        logger.info(f"{res} <= XOR {a} {b}")
 
 
 class Not(Instruction):
@@ -120,7 +123,7 @@ class Not(Instruction):
         a = vm.stack.pop()
         res = (1 << 16) - 1 - a
         vm.stack.append(res)
-        print(f"{res} <= NOT {a}")
+        logger.info(f"{res} <= NOT {a}")
 
 
 class Byte(Instruction):
@@ -134,3 +137,4 @@ class Byte(Instruction):
         res = b & bit_mask
         res = res >> n * 8
         vm.stack.append(res)
+        logger.info("BYTE")

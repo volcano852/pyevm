@@ -1,4 +1,8 @@
+import logging
+
 from evm import VirtualMachine, Instruction
+
+logger = logging.getLogger('pyevm')
 
 
 class Push(Instruction):
@@ -14,7 +18,7 @@ class Push(Instruction):
             vm.stack.append(value)
             values.append(value)
 
-        print(f"PUSH{self.count} {values}")
+        logger.info(f"PUSH{self.count} {values}")
 
 
 class Dup(Instruction):
@@ -32,7 +36,7 @@ class Dup(Instruction):
         while values:
             vm.stack.append(values.pop())
         vm.stack.append(dup_value)
-        print(f"{dup_value} <= DUP{self.count}")
+        logger.info(f"{dup_value} <= DUP{self.count}")
 
 
 class Swap(Instruction):
@@ -52,7 +56,7 @@ class Swap(Instruction):
         while values:
             vm.stack.append(values.pop())
         vm.stack.append(swap_value2)
-        print(f"{swap_value1,swap_value2} <= SWAP{self.count}")
+        logger.info(f"{swap_value1,swap_value2} <= SWAP{self.count}")
 
 
 class Log(Instruction):
