@@ -1,5 +1,5 @@
 from pyevm.evm import VirtualMachine, Instruction
-from instructions.binary_maths import sign_extend
+from instructions.binary_maths import *
 
 
 class Stop(Instruction):
@@ -89,7 +89,16 @@ class SMod(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        raise NotImplementedError()
+        a = vm.stack.pop()
+        b = vm.stack.pop()
+        if b == 0:
+            res = 0
+        else:
+            sign_bit = get_ith_bit(a, 255)
+            res = abs(twos_complement_binary_to_decimal(a, 256)) % abs(twos_complement_binary_to_decimal(b, 256))
+            if sign_bit == 1:  # negative number
+                res = res * -1
+        vm.stack.append(decimal_to_twos_complement_binary(res, 256))
 
 
 class AddMod(Instruction):

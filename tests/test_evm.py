@@ -71,3 +71,11 @@ def test_sign_extend():
     vm.stack.append(8)
     vm.execute(bytearray([0x0b]))
     assert twos_complement_binary_to_decimal(vm.stack.pop(), 256) == twos_complement_binary_to_decimal(-42, 8)
+
+
+def test_smod():
+    vm = VirtualMachine(instruction_set)
+    vm.stack.append(decimal_to_twos_complement_binary(3, 256))
+    vm.stack.append(decimal_to_twos_complement_binary(-23, 256))
+    vm.execute(bytearray([0x07]))
+    assert twos_complement_binary_to_decimal(vm.stack.pop(), 256) == -2
