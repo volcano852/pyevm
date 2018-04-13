@@ -1,6 +1,7 @@
-from pyevm.evm import VirtualMachine, Instruction
-from instructions.binary_maths import *
 import logging
+
+from instructions.binary_maths import *
+from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
 
@@ -9,7 +10,7 @@ class Stop(Instruction):
     def __init__(self):
         super().__init__(0, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         raise RuntimeError("Programmed stopped")
 
 
@@ -17,7 +18,7 @@ class Add(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         res = a + b
@@ -29,7 +30,7 @@ class Mul(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         res = a * b
@@ -41,7 +42,7 @@ class Sub(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         res = a - b
@@ -53,7 +54,7 @@ class Div(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         if b == 0:
@@ -68,7 +69,7 @@ class SDiv(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         raise NotImplementedError()
 
 
@@ -76,7 +77,7 @@ class Mod(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         if b == 0:
@@ -91,7 +92,7 @@ class SMod(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         if b == 0:
@@ -110,7 +111,7 @@ class AddMod(Instruction):
     def __init__(self):
         super().__init__(3, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         c = vm.stack.pop()
@@ -126,7 +127,7 @@ class MulMod(Instruction):
     def __init__(self):
         super().__init__(3, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         c = vm.stack.pop()
@@ -142,7 +143,7 @@ class Exp(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         a = vm.stack.pop()
         b = vm.stack.pop()
         res = a ** b
@@ -154,7 +155,7 @@ class SignExtend(Instruction):
     def __init__(self):
         super().__init__(2, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, vm):
         number_bits = vm.stack.pop()
         binary = vm.stack.pop()
         res = sign_extend(binary, number_bits, 256)

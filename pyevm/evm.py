@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod
 from typing import Dict, List
+
+from instructions.instruction import Instruction
 
 
 class VirtualMachine:
-    def __init__(self, instruction_set):
-        self.instruction_set: Dict[int, Instruction] = instruction_set
+    def __init__(self):
+        self.instruction_set: Dict[int, Instruction] = {}
         self.gas_available: int = 0
         self.pc: int = 0
         self.memory: Dict[int, int] = {}
@@ -21,11 +22,3 @@ class VirtualMachine:
             self.pc += 1
 
 
-class Instruction(ABC):
-    def __init__(self, stack_removed: int, stack_added: int):
-        self.stack_removed = stack_removed
-        self.stack_added = stack_added
-
-    @abstractmethod
-    def execute(self, vm: VirtualMachine):
-        pass

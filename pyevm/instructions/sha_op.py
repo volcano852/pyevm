@@ -1,4 +1,5 @@
-from evm import VirtualMachine, Instruction
+from evm import VirtualMachine
+from instructions.instruction import Instruction
 import logging
 
 logger = logging.getLogger('pyevm')
