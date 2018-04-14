@@ -3,6 +3,14 @@ from typing import Dict, List
 from instructions.instruction import Instruction
 
 
+class StackEmptyException(Exception):
+    pass
+
+
+class StackOverflowException(Exception):
+    pass
+
+
 class VirtualMachine:
     def __init__(self):
         self.instruction_set: Dict[int, Instruction] = {}
@@ -21,4 +29,14 @@ class VirtualMachine:
             self.instruction_set[operation].execute(self)
             self.pc += 1
 
+    def stack_pop(self) -> int:
+        if len(self.stack) <= 0:
+            raise StackEmptyException("Stack is empty. Cannot pop any value")
 
+        return self.stack.pop()
+
+    def stack_push(self, value: int):
+        if len(self.stack) >= 1024:
+            raise StackOverflowException(f"Maximum stack size reached {len(self.stack)}. Cannot push {value}")
+
+        self.stack.append(value)

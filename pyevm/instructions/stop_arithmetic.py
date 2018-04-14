@@ -19,10 +19,10 @@ class Add(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a + b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= ADD {a} {b}")
 
 
@@ -31,10 +31,10 @@ class Mul(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a * b
-        res = vm.stack.append(res)
+        res = vm.stack_push(res)
         logger.info(f"{res} <= MUL {a} {b}")
 
 
@@ -43,10 +43,10 @@ class Sub(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a - b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= SUB {a} {b}")
 
 
@@ -55,13 +55,13 @@ class Div(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if b == 0:
             res = 0
         else:
             res = a / b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= DIV {a} {b}")
 
 
@@ -78,13 +78,13 @@ class Mod(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if b == 0:
             res = 0
         else:
             res = a % b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= MOD {a} {b}")
 
 
@@ -93,8 +93,8 @@ class SMod(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if b == 0:
             res = 0
         else:
@@ -103,7 +103,7 @@ class SMod(Instruction):
             if sign_bit == 1:  # negative number
                 res = res * -1
         res = decimal_to_twos_complement_binary(res, 256)
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info("SMOD")
 
 
@@ -112,14 +112,14 @@ class AddMod(Instruction):
         super().__init__(3, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
-        c = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
+        c = vm.stack_pop()
         if c == 0:
             res = 0
         else:
             res = (a + b) % c
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= ADDMOD {a} {b} {c}")
 
 
@@ -128,14 +128,14 @@ class MulMod(Instruction):
         super().__init__(3, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
-        c = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
+        c = vm.stack_pop()
         if c == 0:
             res = 0
         else:
             res = (a * b) % c
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= MULMOD {a} {b} {c}")
 
 
@@ -144,10 +144,10 @@ class Exp(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a ** b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= EXP {a} {b}")
 
 
@@ -156,8 +156,8 @@ class SignExtend(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm):
-        number_bits = vm.stack.pop()
-        binary = vm.stack.pop()
+        number_bits = vm.stack_pop()
+        binary = vm.stack_pop()
         res = sign_extend(binary, number_bits, 256)
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{bin(res)[:8]}... <= SIGNEXTEND {number_bits} {binary}")

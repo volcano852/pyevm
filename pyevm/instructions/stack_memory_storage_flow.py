@@ -42,9 +42,9 @@ class SLoad(Instruction):
         super().__init__(1, 1)
 
     def execute(self, vm: VirtualMachine):
-        storage_address = vm.stack.pop()
+        storage_address = vm.stack_pop()
         value = vm.storage[storage_address]
-        vm.stack.append(value)
+        vm.stack_push(value)
         logger.info(f"{value} <= SLOAD {storage_address}")
 
 
@@ -53,8 +53,8 @@ class SStore(Instruction):
         super().__init__(2, 0)
 
     def execute(self, vm: VirtualMachine):
-        storage_address = vm.stack.pop()
-        storage_value = vm.stack.pop()
+        storage_address = vm.stack_pop()
+        storage_value = vm.stack_pop()
         vm.storage[storage_address] = storage_value
         logger.info(f"SSTORE {storage_address}->{storage_value}")
 
@@ -64,7 +64,7 @@ class Jump(Instruction):
         super().__init__(1, 0)
 
     def execute(self, vm: VirtualMachine):
-        res = vm.stack.pop()
+        res = vm.stack_pop()
         vm.pc = res - 1
         logger.info(f"JUMP {res}")
 
@@ -74,8 +74,8 @@ class JumpI(Instruction):
         super().__init__(2, 0)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if b != 0:
             vm.pc = a - 1
 
@@ -86,7 +86,7 @@ class Pc(Instruction):
 
     def execute(self, vm: VirtualMachine):
         res = vm.pc - 1
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= PC")
 
 

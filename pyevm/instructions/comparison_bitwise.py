@@ -10,13 +10,13 @@ class Lt(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if a < b:
             res = 1
         else:
             res = 0
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= LT {a} {b}")
 
 
@@ -25,13 +25,13 @@ class Gt(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if a > b:
             res = 1
         else:
             res = 0
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= GT {a} {b}")
 
 
@@ -56,13 +56,13 @@ class Eq(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         if a == b:
             res = 1
         else:
             res = 0
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= EQ {a} {b}")
 
 
@@ -71,12 +71,12 @@ class IsZero(Instruction):
         super().__init__(1, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
+        a = vm.stack_pop()
         if a == 0:
             res = 1
         else:
             res = 0
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= ISZERO {a}")
 
 
@@ -85,10 +85,10 @@ class And(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a & b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= AND {a} {b}")
 
 
@@ -97,10 +97,10 @@ class Or(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a | b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= OR {a} {b}")
 
 
@@ -109,10 +109,10 @@ class Xor(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
-        b = vm.stack.pop()
+        a = vm.stack_pop()
+        b = vm.stack_pop()
         res = a ^ b
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= XOR {a} {b}")
 
 
@@ -121,9 +121,9 @@ class Not(Instruction):
         super().__init__(1, 1)
 
     def execute(self, vm: VirtualMachine):
-        a = vm.stack.pop()
+        a = vm.stack_pop()
         res = (1 << 16) - 1 - a
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info(f"{res} <= NOT {a}")
 
 
@@ -132,10 +132,10 @@ class Byte(Instruction):
         super().__init__(2, 1)
 
     def execute(self, vm: VirtualMachine):
-        n = vm.stack.pop()  # 0 <= n < 32
-        b = vm.stack.pop()
+        n = vm.stack_pop()  # 0 <= n < 32
+        b = vm.stack_pop()
         bit_mask = (2 ** 8 - 1) << n * 8
         res = b & bit_mask
         res = res >> n * 8
-        vm.stack.append(res)
+        vm.stack_push(res)
         logger.info("BYTE")
