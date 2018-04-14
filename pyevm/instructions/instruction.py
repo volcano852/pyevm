@@ -9,3 +9,11 @@ class Instruction(ABC):
     @abstractmethod
     def execute(self, vm):
         pass
+
+
+class StopExecutionException(Exception):
+    pass
+
+
+class UnknownInstructionException(Exception):
+    pass

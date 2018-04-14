@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from instructions.instruction import Instruction
+from instructions.instruction import Instruction, UnknownInstructionException
 
 
 class StackEmptyException(Exception):
@@ -26,7 +26,11 @@ class VirtualMachine:
         self.operations = operations
         while self.pc < len(self.operations):
             operation = operations[self.pc]
-            self.instruction_set[operation].execute(self)
+            try:
+                instruction = self.instruction_set[operation]
+                instruction.execute(self)
+            except KeyError as err:
+                raise UnknownInstructionException(f"{instruction} does not exist in the instruction set", err)
             self.pc += 1
 
     def stack_pop(self) -> int:
