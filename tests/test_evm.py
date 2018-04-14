@@ -2,7 +2,7 @@ import pytest
 
 from evm import VirtualMachine, StackOverflowException
 from instructions.binary_maths import decimal_to_twos_complement_binary, twos_complement_binary_to_decimal
-from instructions.instruction_set import instruction_set
+from instructions.instruction_set import instruction_set, StopExecutionException
 
 
 @pytest.fixture
@@ -95,4 +95,6 @@ def test_vm_stack_size_and_exception_raised_when_full(setup_vm):
         setup_vm.stack_push(0xdead)  # one too much and you are 0xdead
 
 
-
+def test_stop_instruction(setup_vm):
+    with pytest.raises(StopExecutionException):
+        setup_vm.execute(bytearray([0x060, 0x05, 0x00]))

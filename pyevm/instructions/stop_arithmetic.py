@@ -1,7 +1,7 @@
 import logging
 
 from instructions.binary_maths import *
-from instructions.instruction import Instruction
+from instructions.instruction import Instruction, StopExecutionException
 
 logger = logging.getLogger('pyevm')
 
@@ -11,7 +11,7 @@ class Stop(Instruction):
         super().__init__(0, 0)
 
     def execute(self, vm):
-        raise RuntimeError("Programmed stopped")
+        raise StopExecutionException("Program halted")
 
 
 class Add(Instruction):
