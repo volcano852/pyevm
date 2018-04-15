@@ -1,4 +1,5 @@
 from evm import VirtualMachine
+from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 import logging
 
@@ -10,6 +11,9 @@ class BlockHash(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["blockhash"]
+
 
 class CoinBase(Instruction):
     def __init__(self):
@@ -17,6 +21,9 @@ class CoinBase(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]
 
 
 class TimeStamp(Instruction):
@@ -26,6 +33,9 @@ class TimeStamp(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class Number(Instruction):
     def __init__(self):
@@ -33,6 +43,9 @@ class Number(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]
 
 
 class Difficulty(Instruction):
@@ -42,6 +55,9 @@ class Difficulty(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class GasLimit(Instruction):
     def __init__(self):
@@ -49,3 +65,6 @@ class GasLimit(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]

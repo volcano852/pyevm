@@ -1,5 +1,6 @@
 import logging
 
+from instructions.gas_costs import op_cost
 from instructions.binary_maths import *
 from instructions.instruction import Instruction
 
@@ -13,6 +14,9 @@ class Stop(Instruction):
     def execute(self, vm):
         raise RuntimeError("Programmed stopped")
 
+    def consume_gas(self, vm):
+        return op_cost["zero"]
+
 
 class Add(Instruction):
     def __init__(self):
@@ -24,6 +28,9 @@ class Add(Instruction):
         res = a + b
         vm.stack_push(res)
         logger.info(f"{res} <= ADD {a} {b}")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Mul(Instruction):
@@ -37,6 +44,9 @@ class Mul(Instruction):
         res = vm.stack_push(res)
         logger.info(f"{res} <= MUL {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["low"]
+
 
 class Sub(Instruction):
     def __init__(self):
@@ -48,6 +58,9 @@ class Sub(Instruction):
         res = a - b
         vm.stack_push(res)
         logger.info(f"{res} <= SUB {a} {b}")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Div(Instruction):
@@ -64,6 +77,9 @@ class Div(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= DIV {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["low"]
+
 
 class SDiv(Instruction):
     def __init__(self):
@@ -71,6 +87,9 @@ class SDiv(Instruction):
 
     def execute(self, vm):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["low"]
 
 
 class Mod(Instruction):
@@ -86,6 +105,9 @@ class Mod(Instruction):
             res = a % b
         vm.stack_push(res)
         logger.info(f"{res} <= MOD {a} {b}")
+
+    def consume_gas(self, vm):
+        return op_cost["low"]
 
 
 class SMod(Instruction):
@@ -106,6 +128,9 @@ class SMod(Instruction):
         vm.stack_push(res)
         logger.info("SMOD")
 
+    def consume_gas(self, vm):
+        return op_cost["low"]
+
 
 class AddMod(Instruction):
     def __init__(self):
@@ -121,6 +146,9 @@ class AddMod(Instruction):
             res = (a + b) % c
         vm.stack_push(res)
         logger.info(f"{res} <= ADDMOD {a} {b} {c}")
+
+    def consume_gas(self, vm):
+        return op_cost["mid"]
 
 
 class MulMod(Instruction):
@@ -138,6 +166,9 @@ class MulMod(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= MULMOD {a} {b} {c}")
 
+    def consume_gas(self, vm):
+        return op_cost["mid"]
+
 
 class Exp(Instruction):
     def __init__(self):
@@ -150,6 +181,13 @@ class Exp(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= EXP {a} {b}")
 
+    def consume_gas(self, vm):
+        mu_s_1 = None
+        if mu_s_1 == 0:
+            return op_cost["exp"]
+        elif mu_s_1 > 0:
+            return op_cost["exp"] + (1 * op_cost["expbyte"] * (1 + math.log(mu_s_2, 256)))
+
 
 class SignExtend(Instruction):
     def __init__(self):
@@ -161,3 +199,6 @@ class SignExtend(Instruction):
         res = sign_extend(binary, number_bits, 256)
         vm.stack_push(res)
         logger.info(f"{bin(res)[:8]}... <= SIGNEXTEND {number_bits} {binary}")
+
+    def consume_gas(self, vm):
+        return op_cost["low"]

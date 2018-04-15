@@ -1,6 +1,8 @@
-from evm import VirtualMachine
-from instructions.instruction import Instruction
 import logging
+
+from evm import VirtualMachine
+from instructions.gas_costs import op_cost
+from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
 
@@ -12,6 +14,9 @@ class Address(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class Balance(Instruction):
     def __init__(self):
@@ -19,6 +24,9 @@ class Balance(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["balance"]
 
 
 class Origin(Instruction):
@@ -28,6 +36,9 @@ class Origin(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class Caller(Instruction):
     def __init__(self):
@@ -35,6 +46,9 @@ class Caller(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]
 
 
 class CallValue(Instruction):
@@ -44,6 +58,9 @@ class CallValue(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class CallDataLoad(Instruction):
     def __init__(self):
@@ -51,6 +68,9 @@ class CallDataLoad(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class CallDataSize(Instruction):
@@ -60,6 +80,9 @@ class CallDataSize(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class CallDataCopy(Instruction):
     def __init__(self):
@@ -67,6 +90,9 @@ class CallDataCopy(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"] + op_cost["copy"] * (mu_s_2 / 32)
 
 
 class CodeSize(Instruction):
@@ -76,6 +102,9 @@ class CodeSize(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class CodeCopy(Instruction):
     def __init__(self):
@@ -83,6 +112,9 @@ class CodeCopy(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"] + op_cost["copy"] * (mu_s_2 / 32)
 
 
 class GasPrice(Instruction):
@@ -92,6 +124,9 @@ class GasPrice(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class ExtCodeSize(Instruction):
     def __init__(self):
@@ -99,6 +134,9 @@ class ExtCodeSize(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["extcode"]
 
 
 class ExtCodeCopy(Instruction):
@@ -108,6 +146,9 @@ class ExtCodeCopy(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        op_cost["extcode"] + op_cost["copy"] * (mu_s_3 / 32)
+
 
 class ReturnDataSize(Instruction):
     def __init__(self):
@@ -116,6 +157,9 @@ class ReturnDataSize(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class ReturnDataCopy(Instruction):
     def __init__(self):
@@ -123,3 +167,6 @@ class ReturnDataCopy(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"] + op_cost["copy"] * (mu_s_2 / 32)

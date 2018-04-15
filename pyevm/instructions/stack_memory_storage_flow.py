@@ -1,6 +1,8 @@
-from evm import VirtualMachine
-from instructions.instruction import Instruction
 import logging
+
+from evm import VirtualMachine
+from instructions.gas_costs import op_cost
+from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
 
@@ -11,6 +13,9 @@ class Pop(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]
 
 
 class MLoad(Instruction):
@@ -28,6 +33,9 @@ class MStore(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class MStore8(Instruction):
     def __init__(self):
@@ -35,6 +43,9 @@ class MStore8(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class SLoad(Instruction):
@@ -47,6 +58,9 @@ class SLoad(Instruction):
         vm.stack_push(value)
         logger.info(f"{value} <= SLOAD {storage_address}")
 
+    def consume_gas(self, vm):
+        return op_cost["sload"]
+
 
 class SStore(Instruction):
     def __init__(self):
@@ -58,6 +72,9 @@ class SStore(Instruction):
         vm.storage[storage_address] = storage_value
         logger.info(f"SSTORE {storage_address}->{storage_value}")
 
+    def consume_gas(self, vm):
+        return cost_store_storage(sigma, mu)
+
 
 class Jump(Instruction):
     def __init__(self):
@@ -67,6 +84,9 @@ class Jump(Instruction):
         res = vm.stack_pop()
         vm.pc = res - 1
         logger.info(f"JUMP {res}")
+
+    def consume_gas(self, vm):
+        return op_cost["mid"]
 
 
 class JumpI(Instruction):
@@ -79,6 +99,9 @@ class JumpI(Instruction):
         if b != 0:
             vm.pc = a - 1
 
+    def consume_gas(self, vm):
+        return op_cost["high"]
+
 
 class Pc(Instruction):
     def __init__(self):
@@ -89,6 +112,9 @@ class Pc(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= PC")
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class MSize(Instruction):
     def __init__(self):
@@ -96,6 +122,9 @@ class MSize(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["base"]
 
 
 class Gas(Instruction):
@@ -105,6 +134,9 @@ class Gas(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["base"]
+
 
 class JumpDest(Instruction):
     def __init__(self):
@@ -112,3 +144,6 @@ class JumpDest(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["jumpdest"]

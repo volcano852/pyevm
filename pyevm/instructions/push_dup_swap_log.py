@@ -1,6 +1,7 @@
 import logging
 
 from evm import VirtualMachine
+from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
@@ -21,6 +22,9 @@ class Push(Instruction):
 
         logger.info(f"PUSH{self.count} {values}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Dup(Instruction):
     def __init__(self, count):
@@ -38,6 +42,9 @@ class Dup(Instruction):
             vm.stack_push(values.pop())
         vm.stack_push(dup_value)
         logger.info(f"{dup_value} <= DUP{self.count}")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Swap(Instruction):
@@ -59,6 +66,9 @@ class Swap(Instruction):
         vm.stack_push(swap_value2)
         logger.info(f"{swap_value1,swap_value2} <= SWAP{self.count}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Log(Instruction):
     def __init__(self, count):
@@ -67,3 +77,8 @@ class Log(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        cost = op_cost["log"]
+        for i in range(self.count):
+            cost += op_cost["logtopic"]

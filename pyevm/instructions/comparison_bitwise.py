@@ -1,6 +1,8 @@
-from evm import VirtualMachine
-from instructions.instruction import Instruction
 import logging
+
+from evm import VirtualMachine
+from instructions.gas_costs import op_cost
+from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
 
@@ -19,6 +21,9 @@ class Lt(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= LT {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Gt(Instruction):
     def __init__(self):
@@ -34,6 +39,9 @@ class Gt(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= GT {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Slt(Instruction):
     def __init__(self):
@@ -42,6 +50,9 @@ class Slt(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Sgt(Instruction):
     def __init__(self):
@@ -49,6 +60,9 @@ class Sgt(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Eq(Instruction):
@@ -65,6 +79,9 @@ class Eq(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= EQ {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class IsZero(Instruction):
     def __init__(self):
@@ -79,6 +96,9 @@ class IsZero(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= ISZERO {a}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class And(Instruction):
     def __init__(self):
@@ -90,6 +110,9 @@ class And(Instruction):
         res = a & b
         vm.stack_push(res)
         logger.info(f"{res} <= AND {a} {b}")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Or(Instruction):
@@ -103,6 +126,9 @@ class Or(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= OR {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Xor(Instruction):
     def __init__(self):
@@ -115,6 +141,9 @@ class Xor(Instruction):
         vm.stack_push(res)
         logger.info(f"{res} <= XOR {a} {b}")
 
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
+
 
 class Not(Instruction):
     def __init__(self):
@@ -125,6 +154,9 @@ class Not(Instruction):
         res = (1 << 16) - 1 - a
         vm.stack_push(res)
         logger.info(f"{res} <= NOT {a}")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]
 
 
 class Byte(Instruction):
@@ -139,3 +171,6 @@ class Byte(Instruction):
         res = res >> n * 8
         vm.stack_push(res)
         logger.info("BYTE")
+
+    def consume_gas(self, vm):
+        return op_cost["verylow"]

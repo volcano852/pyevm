@@ -28,3 +28,13 @@ pip install -r requirements.txt
 ```
 py.test tests
 ```
+
+## References
+
+**Ethereum py-evm**
+
+https://github.com/ethereum/py-evm/
+
+**Logs and events**
+
+https://media.consensys.net/technical-introduction-to-events-and-logs-in-ethereum-a074d65dd61e

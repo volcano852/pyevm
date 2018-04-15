@@ -1,6 +1,8 @@
-from evm import VirtualMachine
-from instructions.instruction import Instruction
 import logging
+
+from evm import VirtualMachine
+from instructions.gas_costs import op_cost
+from instructions.instruction import Instruction
 
 logger = logging.getLogger('pyevm')
 
@@ -12,6 +14,9 @@ class Create(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["create"]
+
 
 class Call(Instruction):
     def __init__(self):
@@ -20,6 +25,8 @@ class Call(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return cost_call(sigma, mu)
 
 class CallCode(Instruction):
     def __init__(self):
@@ -27,6 +34,9 @@ class CallCode(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return cost_call(sigma, mu)
 
 
 class Return(Instruction):
@@ -36,6 +46,9 @@ class Return(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["zero"]
+
 
 class DelegateCall(Instruction):
     def __init__(self):
@@ -43,6 +56,9 @@ class DelegateCall(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return cost_call(sigma, mu)
 
 
 class StaticCall(Instruction):
@@ -60,6 +76,9 @@ class Revert(Instruction):
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
 
+    def consume_gas(self, vm):
+        return op_cost["zero"]
+
 
 class Invalid(Instruction):
     def __init__(self):
@@ -75,3 +94,6 @@ class SelfDestruct(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return cost_self_destruct(sigma, mu)

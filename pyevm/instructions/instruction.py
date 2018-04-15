@@ -9,3 +9,7 @@ class Instruction(ABC):
     @abstractmethod
     def execute(self, vm):
         pass
+
+    @abstractmethod
+    def consume_gas(self, vm):
+        pass

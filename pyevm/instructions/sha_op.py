@@ -1,4 +1,5 @@
 from evm import VirtualMachine
+from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 import logging
 
@@ -11,3 +12,6 @@ class Sha3(Instruction):
 
     def execute(self, vm: VirtualMachine):
         raise NotImplementedError()
+
+    def consume_gas(self, vm):
+        return op_cost["sha3"] + op_cost["sha3word"] * (s_1 / 32)
