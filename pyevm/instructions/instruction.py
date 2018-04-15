@@ -13,3 +13,11 @@ class Instruction(ABC):
     @abstractmethod
     def consume_gas(self, vm):
         pass
+
+
+class StopExecutionException(Exception):
+    pass
+
+
+class UnknownInstructionException(Exception):
+    pass

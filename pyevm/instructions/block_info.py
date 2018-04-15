@@ -68,3 +68,11 @@ class GasLimit(Instruction):
 
     def consume_gas(self, vm):
         return op_cost["base"]
+
+
+class StopExecutionException(Exception):
+    pass
+
+
+class UnknownInstructionException(Exception):
+    pass
