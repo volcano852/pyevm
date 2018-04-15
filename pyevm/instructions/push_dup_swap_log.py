@@ -1,6 +1,6 @@
 import logging
+from typing import Tuple, List
 
-from evm import VirtualMachine
 from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 
@@ -12,15 +12,15 @@ class Push(Instruction):
         super().__init__(0, 1)
         self.count = count
 
-    def execute(self, vm: VirtualMachine):
-        values = []
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
+        values: List[int] = []
         for i in range(self.count):
             vm.pc += 1
             value = vm.operations[vm.pc]
-            vm.stack_push(value)
             values.append(value)
 
         logger.info(f"PUSH{self.count} {values}")
+        return tuple(reversed(values))
 
     def consume_gas(self, vm):
         return op_cost["verylow"]
@@ -31,40 +31,30 @@ class Dup(Instruction):
         super().__init__(count, count + 1)
         self.count = count
 
-    def execute(self, vm: VirtualMachine):
-        values = []
-        for i in range(self.count):
-            values.append(vm.stack_pop())
-
-        dup_value = values[-1]
-
-        while values:
-            vm.stack_push(values.pop())
-        vm.stack_push(dup_value)
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
+        dup_value = args[-1]
         logger.info(f"{dup_value} <= DUP{self.count}")
+        values = [dup_value]
+        values.extend(args)
+        return tuple(values)
 
     def consume_gas(self, vm):
         return op_cost["verylow"]
 
 
+# TODO: Refactoring and make sure this works now that we pop out the values before going into execute
 class Swap(Instruction):
     def __init__(self, count):
         super().__init__(count + 1, count + 1)
         self.count = count
 
-    def execute(self, vm: VirtualMachine):
-        swap_value1 = vm.stack_pop()
-        values = []
-        for i in range(self.count - 1):
-            values.append(vm.stack_pop())
-
-        swap_value2 = values.pop()
-        vm.stack_push(swap_value1)
-
-        while values:
-            vm.stack_push(values.pop())
-        vm.stack_push(swap_value2)
-        logger.info(f"{swap_value1,swap_value2} <= SWAP{self.count}")
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
+        vals = list(args)
+        swap_value = vals[0]
+        vals[0] = vals[-1]
+        vals[-1] = swap_value
+        logger.info(f"{vals[0],vals[-1]} <= SWAP{self.count}")
+        return tuple(vals)
 
     def consume_gas(self, vm):
         return op_cost["verylow"]
@@ -75,7 +65,7 @@ class Log(Instruction):
         super().__init__(count + 2, 0)
         self.count = count
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):

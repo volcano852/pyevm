@@ -1,6 +1,6 @@
 import logging
+from typing import Tuple
 
-from evm import VirtualMachine
 from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 
@@ -11,7 +11,7 @@ class Address(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -22,7 +22,7 @@ class Balance(Instruction):
     def __init__(self):
         super().__init__(1, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -33,7 +33,7 @@ class Origin(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -44,7 +44,7 @@ class Caller(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -55,7 +55,7 @@ class CallValue(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -66,7 +66,7 @@ class CallDataLoad(Instruction):
     def __init__(self):
         super().__init__(1, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -77,7 +77,7 @@ class CallDataSize(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -88,7 +88,7 @@ class CallDataCopy(Instruction):
     def __init__(self):
         super().__init__(3, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -99,7 +99,7 @@ class CodeSize(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -110,7 +110,7 @@ class CodeCopy(Instruction):
     def __init__(self):
         super().__init__(3, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -121,7 +121,7 @@ class GasPrice(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -132,7 +132,7 @@ class ExtCodeSize(Instruction):
     def __init__(self):
         super().__init__(1, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -143,7 +143,7 @@ class ExtCodeCopy(Instruction):
     def __init__(self):
         super().__init__(4, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -154,7 +154,7 @@ class ReturnDataSize(Instruction):
     def __init__(self):
         super().__init__(0, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -165,7 +165,7 @@ class ReturnDataCopy(Instruction):
     def __init__(self):
         super().__init__(3, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):

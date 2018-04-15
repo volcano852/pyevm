@@ -1,6 +1,6 @@
 import logging
+from typing import Tuple
 
-from evm import VirtualMachine
 from instructions.gas_costs import op_cost
 from instructions.instruction import Instruction
 
@@ -11,7 +11,7 @@ class Create(Instruction):
     def __init__(self):
         super().__init__(3, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -22,17 +22,18 @@ class Call(Instruction):
     def __init__(self):
         super().__init__(7, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
         return cost_call(sigma, mu)
 
+
 class CallCode(Instruction):
     def __init__(self):
         super().__init__(7, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -43,7 +44,7 @@ class Return(Instruction):
     def __init__(self):
         super().__init__(2, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -54,7 +55,7 @@ class DelegateCall(Instruction):
     def __init__(self):
         super().__init__(6, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -65,7 +66,7 @@ class StaticCall(Instruction):
     def __init__(self):
         super().__init__(6, 1)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
 
@@ -73,7 +74,7 @@ class Revert(Instruction):
     def __init__(self):
         super().__init__(2, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):
@@ -84,7 +85,7 @@ class Invalid(Instruction):
     def __init__(self):
         super().__init__(0, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
 
@@ -92,7 +93,7 @@ class SelfDestruct(Instruction):
     def __init__(self):
         super().__init__(1, 0)
 
-    def execute(self, vm: VirtualMachine):
+    def execute(self, args: Tuple[int], vm) -> Tuple[int]:
         raise NotImplementedError()
 
     def consume_gas(self, vm):

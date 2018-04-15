@@ -16,14 +16,14 @@ def test_simple_sum(setup_vm):
     # 5 + 4 == 9
     operations = bytearray([0x60, 0x05, 0x60, 0x04, 0x01])
     setup_vm.execute(operations)
-    assert setup_vm.stack_pop() == 9
+    assert setup_vm.stack_pop(1) == (9,)
 
 
 def test_more_complex_arithmetic(setup_vm):
     # (5 * 10 - 1) % 2 == 1
     operations = bytearray([0x63, 0x02, 0x01, 0x0a, 0x05, 0x02, 0x03, 0x06])
     setup_vm.execute(operations)
-    assert setup_vm.stack_pop() == 1
+    assert setup_vm.stack_pop(1) == (1,)
 
 
 def test_dup(setup_vm):
@@ -33,7 +33,7 @@ def test_dup(setup_vm):
 
 
 def test_swap(setup_vm):
-    operations = bytearray([0x62, 0x03, 0x02, 0x01, 0x92])
+    operations = bytearray([0x62, 0x03, 0x02, 0x01, 0x91])
     setup_vm.execute(operations)
     assert setup_vm.stack == [0x01, 0x02, 0x03]
 
@@ -67,32 +67,32 @@ def test_pc(setup_vm):
 
 
 def test_sign_extend(setup_vm):
-    setup_vm.stack_push(decimal_to_twos_complement_binary(-42, 8))
-    setup_vm.stack_push(8)
+    setup_vm.stack_push((decimal_to_twos_complement_binary(-42, 8),))
+    setup_vm.stack_push((8,))
     setup_vm.execute(bytearray([0x0b]))
-    assert twos_complement_binary_to_decimal(setup_vm.stack_pop(), 256) == twos_complement_binary_to_decimal(-42, 8)
+    assert twos_complement_binary_to_decimal(setup_vm.stack_pop(1)[0], 256) == twos_complement_binary_to_decimal(-42, 8)
 
 
 def test_smod(setup_vm):
-    setup_vm.stack_push(decimal_to_twos_complement_binary(3, 256))
-    setup_vm.stack_push(decimal_to_twos_complement_binary(-23, 256))
+    setup_vm.stack_push((decimal_to_twos_complement_binary(3, 256),))
+    setup_vm.stack_push((decimal_to_twos_complement_binary(-23, 256),))
     setup_vm.execute(bytearray([0x07]))
-    assert twos_complement_binary_to_decimal(setup_vm.stack_pop(), 256) == -2
+    assert twos_complement_binary_to_decimal(setup_vm.stack_pop(1)[0], 256) == -2
 
 
 def test_byte(setup_vm):
-    setup_vm.stack_push(0b111111110000000011111111)
-    setup_vm.stack_push(2)
+    setup_vm.stack_push((0b111111110000000011111111,))
+    setup_vm.stack_push((2,))
     setup_vm.execute(bytearray([0x1a]))
-    assert setup_vm.stack_pop() == 0b11111111
+    assert setup_vm.stack_pop(1)[0] == 0b11111111
 
 
 def test_vm_stack_size_and_exception_raised_when_full(setup_vm):
     for i in range(1024):
-        setup_vm.stack_push(i)
+        setup_vm.stack_push((i,))
     assert setup_vm
     with pytest.raises(StackOverflowException):
-        setup_vm.stack_push(0xdead)  # one too much and you are 0xdead
+        setup_vm.stack_push((0xdead,))  # one too much and you are 0xdead
 
 
 def test_stop_instruction(setup_vm):

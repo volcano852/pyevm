@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from instructions.instruction import Instruction, UnknownInstructionException
 
@@ -25,22 +25,33 @@ class VirtualMachine:
     def execute(self, operations: bytearray):
         self.operations = operations
         while self.pc < len(self.operations):
-            operation = operations[self.pc]
+            op_code = operations[self.pc]
             try:
-                instruction = self.instruction_set[operation]
-                instruction.execute(self)
+                instruction = self.instruction_set[op_code]
             except KeyError as err:
                 raise UnknownInstructionException(f"{instruction} does not exist in the instruction set", err)
+
+            args = self.stack_pop(instruction.number_input)
+            self.gas_used += instruction.consume_gas(args)
+            ret_values = instruction.execute(args, self)
+            self.stack_push(ret_values)
             self.pc += 1
 
-    def stack_pop(self) -> int:
-        if len(self.stack) <= 0:
-            raise StackEmptyException("Stack is empty. Cannot pop any value")
+    def stack_pop(self, number: int) -> Tuple[int]:
+        res = []
+        i = 0
+        while i < number and len(self.stack) > 0:
+            res.append(self.stack.pop())
+            i += 1
+        if i < number:
+            raise StackEmptyException(f"Stack is empty. Cannot pop {number - i} remaining values")
+        return tuple(res)
 
-        return self.stack.pop()
+    def stack_push(self, values: Tuple[int]):
+        vals = list(values)
+        for _ in values:
+            val = vals.pop()
+            self.stack.append(val)
+            if len(self.stack) > 1024:
+                raise StackOverflowException(f"Maximum stack size reached {len(self.stack)}. Cannot push {val}")
 
-    def stack_push(self, value: int):
-        if len(self.stack) >= 1024:
-            raise StackOverflowException(f"Maximum stack size reached {len(self.stack)}. Cannot push {value}")
-
-        self.stack.append(value)
